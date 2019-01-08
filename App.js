@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ActivityIndicator, AppRegistry, FlatList, StyleSheet, Text, View } from 'react-native';
+import { List, ListItem } from "react-native-elements";
 
 export default class FlatListBasics extends Component {
 
@@ -15,7 +16,7 @@ export default class FlatListBasics extends Component {
       console.log(responseJson)
       this.setState({
         isLoading: false,
-        dataSource: responseJson.msgData
+        dataSource: responseJson.body.msgData
       });
     }).catch((error)=>{
         console.log(error.message);
@@ -24,7 +25,6 @@ export default class FlatListBasics extends Component {
   }
 
   render() {
-
     const {perforList} = this.state.dataSource;
     console.log(perforList);
     
@@ -35,11 +35,18 @@ export default class FlatListBasics extends Component {
     }
 
     return (
-      <View style={{flex: 1, paddingTop:20}}>
+      <View style={{flex: 1, paddingTop:20, flexDirection: 'row'}}>
         <FlatList
           data={perforList}
-          renderItem={({item}) => <Text>{item.title}</Text>}
-          // keyExtractor={({id}, index) => id}
+          renderItem={({item}) => (
+            <ListItem
+              roundAvatar
+              title={item.title}
+              subtitle={item.place}
+              avatar={{uri: item.thumbnail}}
+              containerStyle={{borderBottomWidth: 0}}
+            />
+          )}
         />
       </View>
     );
