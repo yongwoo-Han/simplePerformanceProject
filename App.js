@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import { ActivityIndicator, AppRegistry, FlatList, StyleSheet, Text, View } from 'react-native';
 import { List, ListItem } from "react-native-elements";
+import searchDetailItemInfo from './component/searchDetailItemInfo';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-export default class FlatListBasics extends Component {
+class FlatListBasics extends Component {
+
+  static navigationOptions = {
+    title: '지역별',
+  };
 
   constructor(props){
     super(props);
@@ -28,6 +34,11 @@ export default class FlatListBasics extends Component {
     const {perforList} = this.state.dataSource;
     console.log(perforList);
     
+    const onPressFunc = (item) => {
+      console.log('before : --------------------------' + item);
+      this.props.navigation.navigate('searchDetailItemInfo', {item: item});
+    }
+
     if(this.state.isLoading){
       <View style={{flex: 1, padding: 20}}>
         <ActivityIndicator/>
@@ -45,8 +56,10 @@ export default class FlatListBasics extends Component {
               subtitle={item.place}
               avatar={{uri: item.thumbnail}}
               containerStyle={{borderBottomWidth: 0}}
+              button onPress={()=>{onPressFunc({item})}}
             />
           )}
+          keyExtractor={(item,index) => index.toString()}
         />
       </View>
     );
@@ -64,6 +77,19 @@ const styles = StyleSheet.create({
     height: 44,
   },
 })
+
+const RootStack = createStackNavigator({
+  geoScreen: FlatListBasics,
+  searchDetailItemInfo: searchDetailItemInfo
+});
+
+const AppContainer = createAppContainer(RootStack);
+
+export default class App extends Component {
+  render() {
+    return <AppContainer/>
+  }
+}
 
 // skip this line if using Create React Native App
 AppRegistry.registerComponent('simplePerformanceProject', () => FlatListBasics);
